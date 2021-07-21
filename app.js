@@ -16,12 +16,15 @@ const rl = readline.createInterface({
   prompt: 'Which order do you want to see? (\'exit\' to stop) '
 })
 
-let orders;
+let orders = new Map();
 async function initOrders() {
-  orders = await getOrder();
+  let resOrders = await getOrder();
   if(orders === null){
     console.error('There was an error retrieving orders from API');
     process.exit(0);
+  }
+  for(item of resOrders){
+    orders.set(item.id, item);
   }
 }
 
@@ -37,19 +40,14 @@ rl.on('line', async (input) => {
     rl.close();
   }
 
-  for(e of orders){
-    if(e.id == input){
-      order = e;
-      break;
-    }
-  }
+  if(orders.has(input)) order = orders.get(input);
 
   if(order === null){
     order = await getOrder(input);
     if(order === null){
       console.log('Order does not exit\n');
     } else {
-      orders = [...orders, order]
+      orders.set(order.id, order);
     }
   }
   if(order !== null){
