@@ -112,3 +112,11 @@ function calTax(items, taxRate){
   taxes = taxes/100 * taxRate/100;
   return Number(taxes.toFixed(2));
 }
+
+module.exports = {
+  getOrder,
+  getCity,
+  printOrder,
+  calSubTot,
+  calTax
+}
