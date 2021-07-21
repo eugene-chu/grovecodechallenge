@@ -9,12 +9,10 @@
 // Continue to prompt until exit
 // exit
 
-const { promisify } = require('util');
 const axios = require('axios');
 
 async function main () {
   let data = await getData();
-  // console.log(data);
   data.forEach(order => {
     console.log(`Order: ${order.id}\nCustomer Name: ${order.shipping_name}`);
   });
@@ -29,16 +27,14 @@ async function getData (id = undefined) {
   }
   let data;
   await axios.get(APIurl).then(res => {
-    // console.log(res);
     if(res.status !== 200){
       console.log('Status Code response 400');
       return data = null;
     }
-    return data = res.data;
+    data = res.data;
   }).catch(err => {
     console.log(`Error occur when calling the API. There error is: ${err}`)
     return data = null;
-
   })
   return data;
 };
