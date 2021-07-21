@@ -3,7 +3,8 @@
 ## Getting Started
 1. Fork and cloning the repo
 2. cd into the directory and run `npm install`.
-3. run `npm start` to start the app
+- run `npm start` to start the app
+- OR run `npm test` to start test. The tests ensures all the functions used are working as intended.
 
 ## Code Challenge
 >> Build a solution to provide the subtotal, taxes, and total for an order accounting for the quantities of each item in the order and the taxes associated with the city of the customer. All data is provide from an external API.
