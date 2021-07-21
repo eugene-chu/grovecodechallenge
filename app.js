@@ -8,19 +8,48 @@
 // exit
 
 const axios = require('axios');
+const readline = require('readline');
 
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  prompt: 'Which order do you want to see? (\'exit\' to stop) '
+})
+
+let orders;
 async function main () {
-  let orders = await getOrder();
+  orders = await getOrder();
   if(orders === null){
     console.error('There was an error retrieving orders from API');
-    return;
-  }
-  for(const info of orders){
-    await printOrder(info);
+    process.exit(0);
   }
 }
 
 main();
+rl.prompt(true);
+rl.on('line', async (input) => {
+  console.log();
+  let order;
+  input = input.trim().toLowerCase();
+  if(input.toLowerCase() === 'exit'){
+    console.log('Goodbye');
+    rl.close();
+  }
+  if(input == 'txr56' || input == 'dub23'){
+    let resOrder = await getOrder();
+    for(e of resOrder){
+      if(e.id == input) order = e;
+    }
+  }else {
+    order = await getOrder(input);
+  }
+  if(order === null){
+    console.log('Order does not exist\n');
+  } else {
+    await printOrder(order);
+  }
+  rl.prompt(true);
+}).on('close', () => process.exit(0));
 
 async function getOrder(id = undefined) {
   let APIurl = 'https://code-challenge-i2hz6ik37a-uc.a.run.app/orders';
@@ -55,7 +84,7 @@ async function printOrder(orderInfo) {
   console.log(`Customer Name: ${orderInfo.shipping_name}`);
   console.log(`Subtotal: ${subTot}`);
   console.log(`Taxes: ${taxes}`);
-  console.log(`Total: ${(subTot + taxes).toFixed(2)}`);
+  console.log(`Total: ${(subTot + taxes).toFixed(2)}\n`);
 }
 
 function calSubTot(items){
