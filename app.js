@@ -17,7 +17,6 @@ async function main () {
     console.error('There was an error retrieving orders from API');
     return;
   }
-  console.log(orders);
   for(const info of orders){
     await printOrder(info);
   }
@@ -51,7 +50,6 @@ async function getData(APIurl, param){
 
 async function printOrder(orderInfo) {
   let cityTax = await getCity(orderInfo.zip_code);
-  console.log(cityTax);
   let subTot = calSubTot(orderInfo.order_items);
   let taxes = calTax(orderInfo.order_items, cityTax.tax_rate);
 
