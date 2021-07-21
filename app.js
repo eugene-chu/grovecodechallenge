@@ -4,7 +4,7 @@
 // Respond to prompt
 // -- Display the specific order
 // -- exit
-// Continue to prompt until exit?
+// Continue to prompt until exit
 // exit
 
 const axios = require('axios');
@@ -16,16 +16,6 @@ const rl = readline.createInterface({
   prompt: 'Which order do you want to see? (\'exit\' to stop) '
 })
 
-let orders;
-async function main () {
-  orders = await getOrder();
-  if(orders === null){
-    console.error('There was an error retrieving orders from API');
-    process.exit(0);
-  }
-}
-
-main();
 rl.prompt(true);
 rl.on('line', async (input) => {
   console.log();
