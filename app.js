@@ -12,7 +12,17 @@
 const { promisify } = require('util');
 const axios = require('axios');
 
-const getData = async (id = undefined) => {
+async function main () {
+  let data = await getData();
+  // console.log(data);
+  data.forEach(order => {
+    console.log(`Order: ${order.id}\nCustomer Name: ${order.shipping_name}`);
+  });
+}
+
+main();
+
+async function getData (id = undefined) {
   let APIurl = 'https://code-challenge-i2hz6ik37a-uc.a.run.app/orders';
   if(typeof id !== 'undefined'){
     APIurl += `/${id}`;
@@ -32,13 +42,3 @@ const getData = async (id = undefined) => {
   })
   return data;
 };
-
-const main = async () => {
-  let data = await getData();
-  // console.log(data);
-  data.forEach(order => {
-    console.log(`Order: ${order.id}\nCustomer Name: ${order.shipping_name}`);
-  });
-}
-
-main();
