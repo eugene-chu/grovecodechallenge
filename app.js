@@ -3,10 +3,8 @@
 // Prompt user
 // Respond to prompt
 // -- Display the specific order
-// -- Display orders in specific zip code
-// -- Display all orders
 // -- exit
-// Continue to prompt until exit
+// Continue to prompt until exit?
 // exit
 
 const axios = require('axios');
