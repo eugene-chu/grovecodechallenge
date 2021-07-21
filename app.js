@@ -63,6 +63,7 @@ async function printOrder(orderInfo) {
 }
 
 function calSubTot(items){
+  if(!Array.isArray(items)) items = [items];
   let subTot = 0;
   for(const item of items){
     subTot += (item.price * item.quantity);
@@ -71,6 +72,7 @@ function calSubTot(items){
 }
 
 function calTax(items, taxRate){
+  if(!Array.isArray(items)) items = [items];
   let taxes = 0;
   for(const item of items){
     if(item.taxable){
