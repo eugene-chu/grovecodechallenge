@@ -16,29 +16,46 @@ const rl = readline.createInterface({
   prompt: 'Which order do you want to see? (\'exit\' to stop) '
 })
 
-rl.prompt(true);
+let orders;
+async function initOrders() {
+  orders = await getOrder();
+  if(orders === null){
+    console.error('There was an error retrieving orders from API');
+    process.exit(0);
+  }
+}
+
+initOrders();
+
+rl.prompt();
 rl.on('line', async (input) => {
   console.log();
-  let order;
+  let order = null;
   input = input.trim().toLowerCase();
-  if(input.toLowerCase() === 'exit'){
+  if(input.toLowerCase() == 'exit'){
     console.log('Goodbye');
     rl.close();
   }
-  if(input == 'txr56' || input == 'dub23'){
-    let resOrder = await getOrder();
-    for(e of resOrder){
-      if(e.id == input) order = e;
+
+  for(e of orders){
+    if(e.id == input){
+      order = e;
+      break;
     }
-  }else {
-    order = await getOrder(input);
   }
+
   if(order === null){
-    console.log('Order does not exist\n');
-  } else {
+    order = await getOrder(input);
+    if(order === null){
+      console.log('Order does not exit\n');
+    } else {
+      orders = [...orders, order]
+    }
+  }
+  if(order !== null){
     await printOrder(order);
   }
-  rl.prompt(true);
+  rl.prompt();
 }).on('close', () => process.exit(0));
 
 async function getOrder(id = undefined) {
@@ -57,7 +74,7 @@ async function getData(APIurl, param){
   if(typeof param !== 'undefined') APIurl += `/${param}`;
   let returndata;
   await axios.get(APIurl)
-    .then(res => res.status === 200 ? returndata = res.data : returndata = null)
+    .then(res => res.status == 200 ? returndata = res.data : returndata = null)
     .catch(err => {
       console.error(`Error occured when calling the API. The error is: ${err}`);
       returndata = null;
