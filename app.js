@@ -17,10 +17,10 @@ async function main () {
     console.error('There was an error retrieving orders from API');
     return;
   }
-  orders.forEach(order => {
-    console.log(`Order: ${order.id}\nCustomer Name: ${order.shipping_name}`);
-    debugger;
-  });
+  console.log(orders);
+  for(const info of orders){
+    await printOrder(info);
+  }
 }
 
 main();
@@ -38,7 +38,7 @@ async function getCity(zip = undefined) {
 };
 
 async function getData(APIurl, param){
-  if(typeof para !== 'undefined') APIurl += `/${param}`;
+  if(typeof param !== 'undefined') APIurl += `/${param}`;
   let returndata;
   await axios.get(APIurl)
     .then(res => res.status === 200 ? returndata = res.data : returndata = null)
@@ -47,4 +47,36 @@ async function getData(APIurl, param){
       returndata = null;
   })
   return returndata;
+}
+
+async function printOrder(orderInfo) {
+  let cityTax = await getCity(orderInfo.zip_code);
+  console.log(cityTax);
+  let subTot = calSubTot(orderInfo.order_items);
+  let taxes = calTax(orderInfo.order_items, cityTax.tax_rate);
+
+  console.log(`Order: ${orderInfo.id}`);
+  console.log(`Customer Name: ${orderInfo.shipping_name}`);
+  console.log(`Subtotal: ${subTot}`);
+  console.log(`Taxes: ${taxes}`);
+  console.log(`Total: ${(subTot + taxes).toFixed(2)}`);
+}
+
+function calSubTot(items){
+  let subTot = 0;
+  for(const item of items){
+    subTot += (item.price * item.quantity);
+  }
+  return subTot/100;
+}
+
+function calTax(items, taxRate){
+  let taxes = 0;
+  for(const item of items){
+    if(item.taxable){
+      taxes += (item.price * item.quantity);
+    }
+  }
+  taxes = taxes/100 * taxRate/100;
+  return Number(taxes.toFixed(2));
 }
