@@ -1,9 +1,9 @@
 const { getOrder, getCity, printOrder, calSubTot, calTax } = require('./app.js');
 
-async function tests(){
+async function tests() {
   let orders, order, cities, city, subTot, taxes;
 
-  console.log(`Checking getOrder() without param`);
+  console.log(`\nChecking getOrder() without param`);
   orders = await getOrder();
   console.log(`Expect result's length to be 8. Actual: ${orders.length}`);
 
@@ -48,7 +48,7 @@ async function tests(){
   order = await getOrder('sfg26');
   city = await getCity('94107');
   taxes = calTax(order.order_items, city.tax_rate);
-  console.log(`Expect result to be 0.87. Actual: ${taxes}`);
+  console.log(`Expect result to be 1.09. Actual: ${taxes}`);
 
   console.log('\nChecking calTax() for order with both taxable and non-taxable items. Order ID used is \'sfg34\'');
   order = await getOrder('sfg34');
